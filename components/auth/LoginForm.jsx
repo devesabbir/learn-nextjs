@@ -1,6 +1,8 @@
+import { SignInWithCredentials } from "@/app/actions";
+
 const LoginForm = () => {
   return (
-    <form className="login-form">
+    <form action={SignInWithCredentials} className="login-form">
       <div>
         <label htmlFor="email">Email Address</label>
         <input type="email" name="email" id="email" />
