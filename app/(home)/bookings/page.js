@@ -1,8 +1,18 @@
+import { auth } from "@/auth";
 import ProfileInfo from "@/components/user/ProfileInfo";
 import PastBooking from "@/components/user/bookings/PastBooking";
 import UpcomingBooking from "@/components/user/bookings/UpcommingBooking";
+import { redirect } from "next/navigation";
 
-function BookingsPage() {
+async function BookingsPage() {
+  const session = await auth();
+
+  if (!session) {
+    const params = new URLSearchParams();
+    params.set("callbackurl", `${process.env.SITE_URL}/bookings`);
+    redirect("/login?" + params.toString());
+  }
+
   return (
     <>
       <section className="mt-[100px]">

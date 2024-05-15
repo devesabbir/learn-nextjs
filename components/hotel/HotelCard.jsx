@@ -1,17 +1,17 @@
 import Image from "next/image";
 import HotelSummaryInfo from "./HotelSummaryInfo";
 
-function HotelCard() {
+function HotelCard({ hotel }) {
   return (
     <div className="flex gap-6 border border-gray/20 p-4 rounded-md">
       <Image
-        src="/assets/images/image-1.png"
+        src={hotel?.thumbNailUrl}
         className="max-h-[162px] max-w-[240px]"
-        alt=""
+        alt={hotel?.name}
         width={500}
         height={500}
       />
-      <HotelSummaryInfo fromListPage={true} />
+      <HotelSummaryInfo hotel={hotel} fromListPage={true} />
     </div>
   );
 }

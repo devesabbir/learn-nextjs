@@ -5,6 +5,7 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "./service/mongoClient";
 import CredentialsProvider from "next-auth/providers/credentials";
 import userModel from "./models/user-model";
+import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
@@ -28,36 +29,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
-        let user = null;
+        if (credentials == null) return null;
 
-        // logic to salt and hash password
-        //  const pwHash = saltAndHashPassword(credentials.password)
         try {
-          // logic to verify if user exists
-          user = await userModel.findOne({ email: credentials.email });
-
-          if (!user) {
-            // No user found, so this is their first attempt to login
-            // meaning this is also the place you could do registration
-            throw new Error("User not found.");
-          }
+          const user = await userModel.findOne({ email: credentials.email });
 
           if (user) {
-            const isMatch = user.password === credentials.password;
-
+            const isMatch = bcrypt.compareSync(
+              credentials.password,
+              user.password
+            );
             if (isMatch) {
-              // return user object with the their profile data
-
               return user;
             } else {
-              throw new Error("Invalid credentials.");
+              throw new Error("Email or password mismatch");
             }
+          } else {
+            throw new Error("User not found");
           }
         } catch (error) {
           throw new Error(error);
         }
-        return user;
       },
     }),
   ],
+  trustHost: true,
 });

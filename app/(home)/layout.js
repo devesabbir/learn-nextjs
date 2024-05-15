@@ -17,6 +17,7 @@ export default async function RootLayout({ children }) {
       <body className={inter.className}>
         <Navbar menu={true} />
         <main>{children}</main>
+        <div id="portal"></div>
       </body>
     </html>
   );

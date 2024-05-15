@@ -1,35 +1,33 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
-import { redirect } from "next/navigation";
+import connectMongoDB from "@/service";
 
-async function SignWithGoogle() {
-  await signIn("google", { redirectTo: "http://localhost:3000/" });
+async function SignWithGoogle(formData) {
+  const url = formData.get("path") || process.env.SITE_URL;
+  await signIn("google", { redirectTo: url });
 }
-async function SignWithfacebook() {
-  await signIn("facebook", { redirectTo: "http://localhost:3000/" });
+async function SignWithfacebook(formData) {
+  const url = formData.get("path") || process.env.SITE_URL;
+  await signIn("facebook", { redirectTo: url });
 }
 
 async function SignInWithCredentials(formData) {
-  const credentials = {
-    email: formData.get("email"),
-    password: formData.get("password"),
-  };
+  await connectMongoDB();
   try {
-    if (credentials) {
-      const res = await signIn("credentials", {
-        ...credentials,
-        redirect: false,
-      });
-      console.log(res);
-    }
+    const response = await signIn("credentials", {
+      email: formData.get("email"),
+      password: formData.get("password"),
+      redirect: false,
+    });
+    return response;
   } catch (error) {
-    throw error;
+    throw new Error(error);
   }
 }
 
 async function SignOut() {
-  await signOut({ callbackUrl: "http://localhost:3000/login" });
+  await signOut({ callbackUrl: process.env.SITE_URL + "/login" });
 }
 
 export { SignWithGoogle, SignWithfacebook, SignInWithCredentials, SignOut };

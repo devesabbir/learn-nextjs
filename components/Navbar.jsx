@@ -1,14 +1,14 @@
-import Link from "next/link";
 import Image from "next/image";
 import { auth } from "@/auth";
-import { SignOut } from "@/app/actions";
+import SignOut from "./auth/SignOut";
+import Link from "next/link";
 
 const Navbar = async ({ menu }) => {
   const { user } = (await auth()) || {};
 
   return (
     <nav>
-      <Link href="/">
+      <Link href="/" prefetch={false}>
         <Image
           src="/assets/stayswift.svg"
           alt="Stay Swift Logo"
@@ -20,15 +20,15 @@ const Navbar = async ({ menu }) => {
       {menu && (
         <ul>
           <li>
-            <Link href="#">Recommended Places</Link>
+            <Link href="/">Recommended Places</Link>
           </li>
 
           <li>
-            <Link href="#">About Us</Link>
+            <Link href="/hotels">Hotels</Link>
           </li>
 
           <li>
-            <Link href="#">Contact us</Link>
+            <Link href="/payment/1">Payment</Link>
           </li>
 
           <li>
@@ -49,9 +49,7 @@ const Navbar = async ({ menu }) => {
                   />
                 )}{" "}
                 |
-                <form action={SignOut}>
-                  <button type="submit">Sign Out</button>
-                </form>
+                <SignOut />
               </div>
             ) : (
               <Link href="/login" className="login">

@@ -1,5 +1,9 @@
-import RegistrationForm from "@/components/auth/RegistrationForm";
 import SocialLogins from "@/components/auth/SocialLogins";
+import dynamic from "next/dynamic";
+const RegistrationForm = dynamic(
+  () => import("@/components/auth/RegistrationForm"),
+  { ssr: false }
+);
 
 const RegistrationPage = () => {
   return (
