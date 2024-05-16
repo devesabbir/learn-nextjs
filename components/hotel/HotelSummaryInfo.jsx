@@ -1,7 +1,12 @@
 import Link from "next/link";
 import HotelRatings from "./HotelRatings";
 
-function HotelSummaryInfo({ hotel, fromListPage }) {
+function HotelSummaryInfo({ hotel, checkin, checkout, fromListPage }) {
+  let params = "";
+  if (checkin && checkout) {
+    params = `?checkin=${checkin}&checkout=${checkout}`;
+  }
+
   return (
     <>
       <div className={fromListPage ? "flex-1" : "flex-1 container"}>
@@ -17,6 +22,13 @@ function HotelSummaryInfo({ hotel, fromListPage }) {
             {hotel?.propertyCategory} Star Property
           </span>
         </div>
+        {hotel.isBooked && (
+          <div className="mt-1">
+            <span className="bg-red-500 rounded-sm p-1 inline-block">
+              Sold out
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-2 items-end justify-center">
@@ -25,7 +37,7 @@ function HotelSummaryInfo({ hotel, fromListPage }) {
         </h2>
         <p className=" text-right">Per Night for 4 Rooms</p>
         {fromListPage ? (
-          <Link href={`/hotels/${hotel?.id}`} className="btn-primary ">
+          <Link href={`/hotels/${hotel?.id}${params}`} className="btn-primary ">
             Details
           </Link>
         ) : (
